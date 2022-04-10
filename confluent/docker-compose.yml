@@ -80,7 +80,8 @@ services:
   #     CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
 
   connect-binance:
-    image: flaviosiotto/kafka-connect-binance:latest
+#    image: flaviosiotto/kafka-connect-binance:latest
+    image: confluentinc/cp-kafka-connect:7.1.0
     hostname: connect
     depends_on:
       - broker
