@@ -36,8 +36,8 @@ services:
       CONFLUENT_METRICS_ENABLE: 'true'
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
       KAFKA_JMX_PORT: 9101
-      KAFKA_JMX_HOSTNAME: localhost
-      KAFKA_JMX_OPTS: "-Djava.rmi.server.hostname=localhost
+      KAFKA_JMX_HOSTNAME: 10.0.0.3
+      KAFKA_JMX_OPTS: "-Djava.rmi.server.hostname=10.0.0.3
         -Dcom.sun.management.jmxremote.local.only=false
         -Dcom.sun.management.jmxremote.rmi.port=9101
         -Dcom.sun.management.jmxremote.port=9101
