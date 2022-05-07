@@ -38,8 +38,8 @@ services:
       CONFLUENT_METRICS_ENABLE: 'true'
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
       KAFKA_JMX_PORT: 9101
-      KAFKA_JMX_HOSTNAME: 10.0.0.3
-      KAFKA_JMX_OPTS: "-Djava.rmi.server.hostname=10.0.0.3
+      KAFKA_JMX_HOSTNAME: 49.12.13.170
+      KAFKA_JMX_OPTS: "-Djava.rmi.server.hostname=49.12.13.170
         -Dcom.sun.management.jmxremote.local.only=false
         -Dcom.sun.management.jmxremote.rmi.port=9101
         -Dcom.sun.management.jmxremote.port=9101
@@ -120,7 +120,6 @@ services:
   ksqldb-server:
     image: confluentinc/cp-ksqldb-server:7.1.0
     hostname: ksqldb-server
-    container_name: ksqldb-server
     depends_on:
       - broker
       - connect
