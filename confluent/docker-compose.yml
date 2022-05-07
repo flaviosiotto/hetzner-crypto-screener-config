@@ -151,7 +151,8 @@ services:
     entrypoint: /bin/sh
     tty: true
     networks:
-      hostnet: {}
+      - cryptoscreener-dev
+
   ksql-datagen:
     image: confluentinc/ksqldb-examples:7.1.0
     hostname: ksql-datagen
@@ -173,7 +174,8 @@ services:
       STREAMS_SCHEMA_REGISTRY_HOST: schema-registry
       STREAMS_SCHEMA_REGISTRY_PORT: 8081
     networks:
-      hostnet: {}
+      - cryptoscreener-dev
+
   rest-proxy:
     image: confluentinc/cp-kafka-rest:7.1.0
     depends_on:
