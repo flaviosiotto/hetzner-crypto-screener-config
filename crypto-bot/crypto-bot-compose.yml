@@ -23,9 +23,9 @@ services:
 #    volumes:
 #      - ./jesseData/binance-bot-strategy/storage/json:/uploads
     depends_on:
-      - db
+      - postgres
     environment:
-      DB_HOST: db
+      DB_HOST: postgres
       DB_NAME: jesse_db
       DB_USER: jesse_user
       DB_PASSWORD: password
