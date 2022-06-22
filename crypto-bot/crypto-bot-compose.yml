@@ -9,7 +9,7 @@ services:
       - redis
     tty: true
     env_file:
-      - ../.env
+      - .env
     ports:
       - "9000:9000"
       # Jupyter Port
