@@ -14,7 +14,7 @@ services:
       - "8888:8888"
     volumes:
       - /root/si8-cryptobot:/home
-      - /root//root/hetzner-crypto-screener-config/crypto-bot/.env:/home/.env
+      - /root/hetzner-crypto-screener-config/crypto-bot/.env:/home/.env
     command: bash -c "jesse install-live --no-strict && jesse run"
 
   jesse-trades-info:
