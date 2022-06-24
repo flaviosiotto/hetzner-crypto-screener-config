@@ -15,7 +15,7 @@ services:
       # Jupyter Port
       - "8888:8888"
     volumes:
-      - /root/binance-bot-strategy/jesseData/binance-bot-strategy:/home
+      - /root/si8-cryptobot:/home
     command: bash -c "jesse install-live --no-strict && jesse run"
 
   jesse-trades-info:
