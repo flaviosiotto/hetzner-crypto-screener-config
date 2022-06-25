@@ -16,11 +16,14 @@ services:
       - /root/si8-cryptobot:/home
       - /root/hetzner-crypto-screener-config/crypto-bot/.env:/home/.env
     command: bash -c "jesse install-live --no-strict && jesse run"
+    deploy:
+      placement:
+        constraints: [node.hostname == docker-ce-ubuntu-dev02 ]
 
   jesse-trades-info:
     image: jessetradesinfo/jesse-trades-info:v0.2.1
-#    volumes:
-#      - ./jesseData/binance-bot-strategy/storage/json:/uploads
+    volumes:
+      - /root/si8-cryptobot/storage/json:/uploads
     depends_on:
       - postgres
     environment:
@@ -31,6 +34,9 @@ services:
       DB_PORT: 5432
     ports:
       - 3000:3000
+    deploy:
+      placement:
+        constraints: [node.hostname == docker-ce-ubuntu-dev02 ]
 
   ### PostgreSQL ################################################
   postgres:
