@@ -49,6 +49,6 @@ services:
     command: >
       trade
       --logfile /freqtrade/user_data/logs/freqtrade.log
-      --db-url sqlite:////freqtrade/user_data/tradesv3.sqlite
+      --db-url sqlite:////freqtrade/user_data/tradesv3_TouchEmaStrategy.sqlite
       --config /freqtrade/user_data/config_binance.json
       --strategy TouchEmaStrategy
