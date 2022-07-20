@@ -37,7 +37,6 @@ services:
     #   context: .
     #   dockerfile: "./docker/Dockerfile.custom"
     restart: unless-stopped
-    container_name: freqtrade
     volumes:
       - "/root/freqtrade-strategy/user_data:/freqtrade/user_data"
     # Expose api on port 8080 (localhost only)
@@ -46,9 +45,12 @@ services:
     ports:
       - "8089:8080"
     # Default command used when running `docker compose up`
+    secret:
+      freqtrade-touchema-bot-secret
     command: >
       trade
       --logfile /freqtrade/user_data/logs/freqtrade.log
       --db-url sqlite:////freqtrade/user_data/tradesv3_TouchEmaStrategy.sqlite
       --config /freqtrade/user_data/config_binance.json
+      --config /run/secret/freqtrade-touchema-bot-secret
       --strategy TouchEmaStrategy
