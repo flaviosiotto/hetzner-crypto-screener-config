@@ -45,8 +45,8 @@ services:
     ports:
       - "8089:8080"
     # Default command used when running `docker compose up`
-    secret:
-      freqtrade-touchema-bot-secret
+    secrets:
+      - freqtrade-touchema-bot-secret
     command: >
       trade
       --logfile /freqtrade/user_data/logs/freqtrade.log
