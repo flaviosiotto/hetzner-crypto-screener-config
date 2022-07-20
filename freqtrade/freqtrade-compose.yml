@@ -1,5 +1,5 @@
 ---
-version: '3'
+version: '3.9'
 services:
   freqtrade:
     image: freqtradeorg/freqtrade:stable
@@ -54,3 +54,6 @@ services:
       --config /freqtrade/user_data/config_binance.json
       --config /run/secret/freqtrade-touchema-bot-secret
       --strategy TouchEmaStrategy
+secrets:
+  freqtrade-touchema-bot-secret:
+    external: true
