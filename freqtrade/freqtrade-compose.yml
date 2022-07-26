@@ -73,7 +73,7 @@ services:
       - "8090:8080"
     # Default command used when running `docker compose up`
     secrets:
-      - freqtrade-touchema-bot-secret
+      - freqtrade-breakout-bot-secret
     command: >
       trade
       --logfile /freqtrade/user_data/logs/freqtrade_breakout.log
