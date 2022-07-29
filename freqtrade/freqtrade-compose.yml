@@ -107,7 +107,7 @@ services:
       --db-url sqlite:////freqtrade/user_data/tradesv3_FakeoutStrategy.sqlite
       --config /freqtrade/user_data/config_binance.json
       --config /run/secrets/freqtrade-fakeout-bot-secret
-      --strategy FaketStrategy
+      --strategy FakeoutStrategy
 secrets:
   freqtrade-touchema-bot-secret:
     external: true
