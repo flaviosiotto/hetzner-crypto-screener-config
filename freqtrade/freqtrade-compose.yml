@@ -108,6 +108,9 @@ services:
       --config /freqtrade/user_data/config_binance.json
       --config /run/secrets/freqtrade-fakeout-bot-secret
       --strategy FakeoutStrategy
+    deploy:
+      placement:
+        constraints: [node.hostname == docker-ce-ubuntu-dev02 ]
 secrets:
   freqtrade-touchema-bot-secret:
     external: true
