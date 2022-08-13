@@ -111,6 +111,36 @@ services:
     deploy:
       placement:
         constraints: [node.hostname == docker-ce-ubuntu-dev02 ]
+  fakeout-strategy-okx:
+    image: freqtradeorg/freqtrade:stable
+    # image: freqtradeorg/freqtrade:develop
+    # Use plotting image
+    # image: freqtradeorg/freqtrade:develop_plot
+    # Build step - only needed when additional dependencies are needed
+    # build:
+    #   context: .
+    #   dockerfile: "./docker/Dockerfile.custom"
+    restart: unless-stopped
+    volumes:
+      - "/root/freqtrade-strategy/user_data:/freqtrade/user_data"
+    # Expose api on port 8080 (localhost only)
+    # Please read the https://www.freqtrade.io/en/stable/rest-api/ documentation
+    # before enabling this.
+    ports:
+      - "8091:8080"
+    # Default command used when running `docker compose up`
+    secrets:
+      - freqtrade-fakeout-okx-bot-secret
+    command: >
+      trade
+      --logfile /freqtrade/user_data/logs/freqtrade_fakeout_okx.log
+      --db-url sqlite:////freqtrade/user_data/tradesv3_FakeoutStrategy_OKX.sqlite
+      --config /freqtrade/user_data/config_okx.json
+      --config /run/secrets/freqtrade-fakeout-okx-bot-secret
+      --strategy FakeoutStrategy
+    deploy:
+      placement:
+        constraints: [node.hostname == docker-ce-ubuntu-dev02 ]
 secrets:
   freqtrade-touchema-bot-secret:
     external: true
@@ -118,3 +148,6 @@ secrets:
     external: true
   freqtrade-fakeout-bot-secret:
     external: true
+  freqtrade-fakeout-okx-bot-secret:
+    external: true
+
