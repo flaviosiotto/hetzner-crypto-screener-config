@@ -127,7 +127,7 @@ services:
     # Please read the https://www.freqtrade.io/en/stable/rest-api/ documentation
     # before enabling this.
     ports:
-      - "8091:8080"
+      - "8092:8080"
     # Default command used when running `docker compose up`
     secrets:
       - freqtrade-fakeout-okx-bot-secret
