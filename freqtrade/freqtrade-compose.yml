@@ -141,6 +141,38 @@ services:
     deploy:
       placement:
         constraints: [node.hostname == docker-ce-ubuntu-dev02 ]
+  -strategy-ai:
+    image: freqtradeorg/freqtrade:develop_freqai
+    # image: freqtradeorg/freqtrade:develop
+    # Use plotting image
+    # image: freqtradeorg/freqtrade:develop_plot
+    # Build step - only needed when additional dependencies are needed
+    # build:
+    #   context: .
+    #   dockerfile: "./docker/Dockerfile.custom"
+    restart: unless-stopped
+    volumes:
+      - "/root/freqtrade-strategy/user_data:/freqtrade/user_data"
+    # Expose api on port 8080 (localhost only)
+    # Please read the https://www.freqtrade.io/en/stable/rest-api/ documentation
+    # before enabling this.
+    ports:
+      - "8096:8080"
+    # Default command used when running `docker compose up`
+    secrets:
+      - freqtrade-ai-okx-bot-secret
+    command: >
+      trade
+      --logfile /freqtrade/user_data/logs/freqtrade-ai-okx-bot-secret.log
+      --db-url sqlite:////freqtrade/user_data/tradesv3_FreqaiExampleStrategy_OKX.sqlite
+      --config /freqtrade/user_data/config_ai_okx.json
+      --config /run/secrets/freqtrade-fakeout-okx-bot-secret
+      --freqaimodel LightGBMRegressor
+      --strategy FreqaiExampleStrategy
+    deploy:
+      placement:
+        constraints: [node.hostname == docker-ce-ubuntu-dev02 ]
+
 secrets:
   freqtrade-touchema-bot-secret:
     external: true
@@ -150,4 +182,5 @@ secrets:
     external: true
   freqtrade-fakeout-okx-bot-secret:
     external: true
-
+  freqtrade-ai-okx-bot-secret:
+    external: True
