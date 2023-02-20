@@ -11,14 +11,13 @@ services:
     #   context: .
     #   dockerfile: "./docker/Dockerfile.custom"
     restart: unless-stopped
-    container_name: freqtrade
     volumes:
       - "/root/freqtrade-strategy/user_data:/freqtrade/user_data"
     # Expose api on port 8080 (localhost only)
     # Please read the https://www.freqtrade.io/en/stable/rest-api/ documentation
     # before enabling this.
     ports:
-      - "8098:8080"
+      - "8080:8080"
     # Default command used when running `docker compose up`
     command: >
       webserver
