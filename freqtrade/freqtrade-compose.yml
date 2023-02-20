@@ -24,6 +24,9 @@ services:
       webserver
       --logfile /freqtrade/user_data/logs/freqtrade-webserver.log
       --config /freqtrade/user_data/config_binance.json
+    deploy:
+      placement:
+        constraints: [node.hostname == docker-ce-ubuntu-dev02 ]
 
   freqtrade-touchema:
     image: freqtradeorg/freqtrade:stable
