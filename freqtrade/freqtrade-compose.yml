@@ -16,6 +16,8 @@ services:
     # Expose api on port 8080 (localhost only)
     # Please read the https://www.freqtrade.io/en/stable/rest-api/ documentation
     # before enabling this.
+    networks:
+      freqtrade-net: {}
     ports:
       - "8080:8080"
     # Default command used when running `docker compose up`
@@ -54,6 +56,9 @@ services:
       --config /freqtrade/user_data/config_binance.json
       --config /run/secrets/freqtrade-touchema-bot-secret
       --strategy TouchEmaStrategy
+    deploy:
+      placement:
+        constraints: [node.hostname == docker-ce-ubuntu-dev02 ]
   breakout-touchema:
     image: freqtradeorg/freqtrade:stable
     # image: freqtradeorg/freqtrade:develop
@@ -184,3 +189,6 @@ secrets:
     external: true
   freqtrade-ai-okx-bot-secret:
     external: True
+networks:
+  freqtrade-net:
+    driver: overlay
