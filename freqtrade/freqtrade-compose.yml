@@ -39,6 +39,7 @@ services:
     restart: unless-stopped
     volumes:
       - "/root/freqtrade-strategy/user_data:/freqtrade/user_data"
+      - "/mnt/share/freqtrade:/freqtrade/run"
     # Expose api on port 8080 (localhost only)
     # Please read the https://www.freqtrade.io/en/stable/rest-api/ documentation
     # before enabling this.
@@ -50,13 +51,10 @@ services:
     command: >
       trade
       --logfile /freqtrade/user_data/logs/freqtrade.log
-      --db-url sqlite:////freqtrade/user_data/tradesv3_TouchEmaStrategy.sqlite
+      --db-url sqlite:////freqtrade/run/tradesv3_TouchEmaStrategy.sqlite
       --config /freqtrade/user_data/config_binance.json
       --config /run/secrets/freqtrade-touchema-bot-secret
       --strategy TouchEmaStrategy
-    deploy:
-      placement:
-        constraints: [node.hostname == docker-ce-ubuntu-dev02 ]
   breakout-touchema:
     image: freqtradeorg/freqtrade:stable
     # image: freqtradeorg/freqtrade:develop
