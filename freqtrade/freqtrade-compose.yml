@@ -38,8 +38,8 @@ services:
     #   dockerfile: "./docker/Dockerfile.custom"
     restart: unless-stopped
     volumes:
-      - "/root/freqtrade-strategy/user_data:/freqtrade/user_data"
-      - "/mnt/share/freqtrade:/freqtrade/run"
+#      - "/root/freqtrade-strategy/user_data:/freqtrade/user_data"
+      - "shared-data:/freqtrade/run"
     # Expose api on port 8080 (localhost only)
     # Please read the https://www.freqtrade.io/en/stable/rest-api/ documentation
     # before enabling this.
@@ -50,9 +50,10 @@ services:
       - freqtrade-touchema-bot-secret
     command: >
       trade
-      --logfile /freqtrade/user_data/logs/freqtrade.log
+      --logfile /freqtrade/run/freqtrade-strategy/user_data/logs/freqtrade_TouchEmaStrategy.log
       --db-url sqlite:////freqtrade/run/tradesv3_TouchEmaStrategy.sqlite
-      --config /freqtrade/user_data/config_binance.json
+      --userdir /freqtrade/run/freqtrade-strategy/user_data
+      --config /freqtrade/run/freqtrade-strategy/config_binance.json
       --config /run/secrets/freqtrade-touchema-bot-secret
       --strategy TouchEmaStrategy
   breakout-touchema:
@@ -185,3 +186,14 @@ secrets:
     external: true
   freqtrade-ai-okx-bot-secret:
     external: True
+volumes:
+  shared-data:
+    /mnt/share/freqtrade
+
+volumes:
+  shared-data:
+    driver_opts:
+      type: "cifs"
+      o: "addr=u339950.your-storagebox.de,iocharset=utf8,rw,credentials=/etc/backup-credentials.txt,file_mode=0777,dir_mode=0777,uid=1000,forceuid,gid=1000,forcegid"
+      device: "//u339950.your-storagebox.de/backup"
+
