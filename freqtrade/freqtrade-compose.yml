@@ -12,7 +12,7 @@ services:
     #   dockerfile: "./docker/Dockerfile.custom"
     restart: unless-stopped
     volumes:
-      - "/root/freqtrade-strategy/user_data:/freqtrade/user_data"
+      - "shared-data:/freqtrade/run"
     # Expose api on port 8080 (localhost only)
     # Please read the https://www.freqtrade.io/en/stable/rest-api/ documentation
     # before enabling this.
@@ -21,11 +21,9 @@ services:
     # Default command used when running `docker compose up`
     command: >
       webserver
-      --logfile /freqtrade/user_data/logs/freqtrade-webserver.log
-      --config /freqtrade/user_data/config_binance.json
-    deploy:
-      placement:
-        constraints: [node.hostname == docker-ce-ubuntu-dev02 ]
+      --logfile /freqtrade/run/freqtrade/freqtrade-strategy/user_data/logs/freqtrade-webserver.log
+      --config /freqtrade/run/freqtrade/freqtrade-strategy/user_data/config_binance.json
+      --userdir /freqtrade/run/freqtrade/freqtrade-strategy/user_data
 
   freqtrade-touchema:
     image: freqtradeorg/freqtrade:stable
