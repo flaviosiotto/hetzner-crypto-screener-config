@@ -22,7 +22,7 @@ services:
     command: >
       webserver
       --logfile /freqtrade/run/freqtrade/freqtrade-strategy/user_data/logs/freqtrade-webserver.log
-      --config /freqtrade/run/freqtrade/freqtrade-strategy/user_data/config_binance.json
+      --config /freqtrade/run/freqtrade/freqtrade-strategy/user_data/config_backtest_binance.json
       --userdir /freqtrade/run/freqtrade/freqtrade-strategy/user_data
 
   freqtrade-touchema:
@@ -53,6 +53,36 @@ services:
       --config /freqtrade/run/freqtrade/freqtrade-strategy/user_data/config_binance.json
       --config /run/secrets/freqtrade-touchema-bot-secret
       --strategy TouchEmaStrategy
+
+  freqtrade-touchemadelay:
+    image: freqtradeorg/freqtrade:stable
+    # image: freqtradeorg/freqtrade:develop
+    # Use plotting image
+    # image: freqtradeorg/freqtrade:develop_plot
+    # Build step - only needed when additional dependencies are needed
+    # build:
+    #   context: .
+    #   dockerfile: "./docker/Dockerfile.custom"
+    restart: unless-stopped
+    volumes:
+      - "shared-data:/freqtrade/run"
+    # Expose api on port 8080 (localhost only)
+    # Please read the https://www.freqtrade.io/en/stable/rest-api/ documentation
+    # before enabling this.
+    ports:
+      - "8093:8080"
+    # Default command used when running `docker compose up`
+    secrets:
+      - freqtrade-touchemadelay-bot-secret
+    command: >
+      trade
+      --logfile /freqtrade/run/freqtrade/freqtrade-strategy/user_data/logs/freqtrade_TouchEmaDelayStrategy.log
+      --db-url sqlite:////freqtrade/run/freqtrade/tradesv3_TouchEmaDelayStrategy.sqlite
+      --userdir /freqtrade/run/freqtrade/freqtrade-strategy/user_data
+      --config /freqtrade/run/freqtrade/freqtrade-strategy/user_data/config_binance.json
+      --config /run/secrets/freqtrade-touchemadelay-bot-secret
+      --strategy TouchEmaDelayStrategy
+
   breakout-touchema:
     image: freqtradeorg/freqtrade:stable
     # image: freqtradeorg/freqtrade:develop
