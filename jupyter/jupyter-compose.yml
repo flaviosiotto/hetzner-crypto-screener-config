@@ -1,0 +1,18 @@
+version: '3.9'
+services:
+  jupyter-lab:
+    image: jupyter/minimal-notebook:latest
+    restart: unless-stopped
+    volumes:
+      - "shared-data:/mnt/share/storagebox"
+    ports:
+      - "8888:8888"
+    # Default command used when running `docker compose up`
+
+volumes:
+  shared-data:
+    driver: local
+    driver_opts:
+      type: cifs
+      device: //u339950.your-storagebox.de/backup
+      o: "addr=u339950.your-storagebox.de,username=u339950,password=${CIFS_PASS},file_mode=0777,dir_mode=0777,uid=1000,gid=1000"
