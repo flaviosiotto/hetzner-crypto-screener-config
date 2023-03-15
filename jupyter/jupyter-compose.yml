@@ -4,7 +4,7 @@ services:
     image: flaviosiotto/scipy-notebook-freqtrade:latest
     restart: unless-stopped
     volumes:
-      - "shared-data:/mnt/share/storagebox"
+      - "shared-data:/home/jovyan/shared"
     ports:
       - "8888:8888"
     # Default command used when running `docker compose up`
