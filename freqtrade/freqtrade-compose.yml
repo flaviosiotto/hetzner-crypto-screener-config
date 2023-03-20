@@ -24,6 +24,8 @@ services:
       --logfile /freqtrade/run/freqtrade/freqtrade-strategy/user_data/logs/freqtrade-webserver.log
       --config /freqtrade/run/freqtrade/freqtrade-strategy/user_data/config_backtest_binance.json
       --userdir /freqtrade/run/freqtrade/freqtrade-strategy/user_data
+      --datadir /freqtrade/run/data
+
 
   freqtrade-touchema:
     image: freqtradeorg/freqtrade:stable
