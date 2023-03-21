@@ -18,6 +18,8 @@ services:
     #   context: .
     #   dockerfile: "./docker/Dockerfile.custom"
     restart: unless-stopped
+    environment:
+      VITE_BASE_URL: "freqtrade"
     volumes:
       - "shared-data:/freqtrade/run"
     # Expose api on port 8080 (localhost only)
