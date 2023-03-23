@@ -19,7 +19,7 @@ services:
     #   dockerfile: "./docker/Dockerfile.custom"
     restart: unless-stopped
     environment:
-      BASE_URL: "http://localhost/freqtrade"
+      UVICORN_ROOT_PATH: "/freqtrade"
     volumes:
       - "shared-data:/freqtrade/run"
     # Expose api on port 8080 (localhost only)
