@@ -7,6 +7,9 @@ services:
       - "8080:8080"
     volumes:
       - "${PATH_NGINX_CONF}/nginx.conf:/etc/nginx/nginx.conf"
+    deploy:
+      placement:
+        constraints: [node.hostname == docker-ce-ubuntu-dev02 ]
 
   freqtrade-webui:
     image: freqtradeorg/freqtrade:stable
@@ -18,8 +21,6 @@ services:
     #   context: .
     #   dockerfile: "./docker/Dockerfile.custom"
     restart: unless-stopped
-    environment:
-      UVICORN_ROOT_PATH: "/freqtrade"
     volumes:
       - "shared-data:/freqtrade/run"
     # Expose api on port 8080 (localhost only)
