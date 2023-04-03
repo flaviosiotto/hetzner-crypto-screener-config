@@ -1,8 +1,8 @@
 ---
 version: '3.9'
 services:
-  nginx:
-    image: nginx:latest
+  freqtrade-frequi:
+    image: flaviosiotto/frequi:latest
     ports:
       - "8080:8080"
     volumes:
@@ -11,7 +11,7 @@ services:
       placement:
         constraints: [node.hostname == docker-ce-ubuntu-dev02 ]
 
-  freqtrade-webui:
+  freqtrade-backtesting:
     image: freqtradeorg/freqtrade:stable
     # image: freqtradeorg/freqtrade:develop
     # Use plotting image
