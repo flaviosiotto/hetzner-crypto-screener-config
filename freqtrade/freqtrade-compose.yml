@@ -49,12 +49,6 @@ services:
     restart: unless-stopped
     volumes:
       - "shared-data:/freqtrade/run"
-    # Expose api on port 8080 (localhost only)
-    # Please read the https://www.freqtrade.io/en/stable/rest-api/ documentation
-    # before enabling this.
-    ports:
-      - "8089:8080"
-    # Default command used when running `docker compose up`
     secrets:
       - freqtrade-touchema-bot-secret
     command: >
@@ -78,12 +72,6 @@ services:
     restart: unless-stopped
     volumes:
       - "/root/freqtrade-strategy/user_data:/freqtrade/user_data"
-    # Expose api on port 8080 (localhost only)
-    # Please read the https://www.freqtrade.io/en/stable/rest-api/ documentation
-    # before enabling this.
-    ports:
-      - "8090:8080"
-    # Default command used when running `docker compose up`
     secrets:
       - freqtrade-breakout-bot-secret
     command: >
@@ -105,12 +93,6 @@ services:
     restart: unless-stopped
     volumes:
       - "/root/freqtrade-strategy/user_data:/freqtrade/user_data"
-    # Expose api on port 8080 (localhost only)
-    # Please read the https://www.freqtrade.io/en/stable/rest-api/ documentation
-    # before enabling this.
-    ports:
-      - "8091:8080"
-    # Default command used when running `docker compose up`
     secrets:
       - freqtrade-fakeout-bot-secret
     command: >
@@ -135,12 +117,6 @@ services:
     restart: unless-stopped
     volumes:
       - "/root/freqtrade-strategy/user_data:/freqtrade/user_data"
-    # Expose api on port 8080 (localhost only)
-    # Please read the https://www.freqtrade.io/en/stable/rest-api/ documentation
-    # before enabling this.
-    ports:
-      - "8092:8080"
-    # Default command used when running `docker compose up`
     secrets:
       - freqtrade-fakeout-okx-bot-secret
     command: >
@@ -165,12 +141,6 @@ services:
   #   restart: unless-stopped
   #   volumes:
   #     - "/root/freqtrade-strategy/user_data:/freqtrade/user_data"
-  #   # Expose api on port 8080 (localhost only)
-  #   # Please read the https://www.freqtrade.io/en/stable/rest-api/ documentation
-  #   # before enabling this.
-  #   ports:
-  #     - "8096:8080"
-  #   # Default command used when running `docker compose up`
   #   secrets:
   #     - freqtrade-ai-okx-bot-secret
   #   command: >
