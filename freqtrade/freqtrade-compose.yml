@@ -10,6 +10,8 @@ services:
     deploy:
       placement:
         constraints: [node.hostname == docker-ce-ubuntu-dev02 ]
+    command: >
+      nginx -g "daemon off;"
 
   freqtrade-backtesting:
     image: freqtradeorg/freqtrade:stable
