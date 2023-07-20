@@ -30,7 +30,7 @@ jobs:
         with:
           host: ${{ vars.MANAGER_HOSTNAME }}
           username: ${{ vars.OS_USERNAME }}
-          key: ${{ secrets.PUB_KEY }}
+          key: ${{ secrets.PRIV_KEY }}
           port: ${{ vars.SSH_PORT }}
           source: "si8cloud-console/si8cloud-console.yml"
           target: "si8cloud-console"
@@ -47,7 +47,7 @@ jobs:
         with:
           host: ${{ vars.MANAGER_HOSTNAME }}
           username: ${{ vars.OS_USERNAME }}
-          key: ${{ secrets.PUB_KEY }}
+          key: ${{ secrets.PRIV_KEY }}
           port: ${{ vars.SSH_PORT }}
           envs: POSTGRES_DATA_DIR,POSTGRES_DB,POSTGRES_USER,POSTGRES_PASSWORD,PGADMIN_DATA_DIR,PGADMIN_PASSWORD
           script: |
