@@ -33,7 +33,7 @@ jobs:
           key: ${{ secrets.PRIV_KEY }}
           port: ${{ vars.SSH_PORT }}
           source: "si8cloud-console/si8cloud-console.yml"
-          target: "si8cloud-console"
+          target: "si8cloud-console.yml"
       -
         name: deploy docker stack sicloud-console
         uses: appleboy/ssh-action@master
