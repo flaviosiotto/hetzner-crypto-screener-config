@@ -38,13 +38,19 @@ jobs:
         name: deploy docker stack sicloud-console
         uses: appleboy/ssh-action@master
         env:
-          PGDATA_DIR: "/root/postgresql/data"
+          POSTGRES_DATA_DIR: ${{ vars.POSTGRES_DATA_DIR }}
+          POSTGRES_DB: ${{ vars.POSTGRES_DB }}
+          POSTGRES_USER: ${{ vars.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          PGADMIN_DATA_DIR: ${{ vars.PGADMIN_DATA_DIR }}
+          PGADMIN_PASSWORD: ${{ secrets.PGADMIN_PASSWORD }}
         with:
           host: ${{ vars.MANAGER_HOSTNAME }}
           username: ${{ vars.OS_USERNAME }}
           key: ${{ secrets.PUB_KEY }}
           port: ${{ vars.SSH_PORT }}
-          envs: PGDATA_DIR,DOCKER_HUB_USERNAME
+          envs: POSTGRES_DATA_DIR,POSTGRES_DB,POSTGRES_USER,POSTGRES_PASSWORD,PGADMIN_DATA_DIR,PGADMIN_PASSWORD
           script: |
-            export PGDATA_DIR=$PGDATA_DIR
+            export POSTGRES_DATA_DIR=$POSTGRES_DATA_DIR
+            export PGADMIN_DATA_DIR=$PGADMIN_DATA_DIR
             docker stack deploy -c sicloud-console/sicloud-console.yml sicloud-console
