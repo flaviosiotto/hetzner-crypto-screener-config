@@ -53,4 +53,4 @@ jobs:
           script: |
             export POSTGRES_DATA_DIR=$POSTGRES_DATA_DIR
             export PGADMIN_DATA_DIR=$PGADMIN_DATA_DIR
-            docker stack deploy -c si8cloud-console/si8cloud-console.yml si8cloud-console
+            docker stack deploy -c si8cloud-console/si8cloud-console.yml si8cloud-console --with-registry-auth
