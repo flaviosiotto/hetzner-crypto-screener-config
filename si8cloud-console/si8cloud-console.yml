@@ -35,6 +35,11 @@ services:
     deploy:
       placement:
         constraints: [node.hostname == docker-ce-ubuntu-dev02 ]
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
 
   si8cloud-console-fe:
     image: cloud.canister.io:5000/flaviosi8/si8cloud-console-fe:0.4
