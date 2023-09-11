@@ -19,12 +19,11 @@ services:
       - PGADMIN_DEFAULT_EMAIL=admin@local.com
       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
       - PGADMIN_LISTEN_PORT=80
+      - CONFIG_DATABASE_URI=postgresql://pgadmin:pgadmin@postgres:5432/pgadmin
     ports:
       - 80:80
     depends_on:
       - postgres
-    volumes:
-      - ${PGADMIN_DATA_DIR}:/var/lib/pgadmin
 
   si8cloud-console-be:
     image: cloud.canister.io:5000/flaviosi8/si8cloud-console-be:latest
