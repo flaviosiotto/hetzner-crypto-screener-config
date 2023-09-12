@@ -27,7 +27,13 @@ services:
 
   si8cloud-console-be:
     image: cloud.canister.io:5000/flaviosi8/si8cloud-console-be:latest
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    environment:
+      - DB_HOST=postgres
+      - DB_NAME=postgres
+      - DB_PASSWORD=postgres
+      - DB_USER=postgres
+      - DB_PORT=5432
+      - SECRET_KEY=loremipsum
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
@@ -40,6 +46,7 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
 
   si8cloud-console-fe:
     image: cloud.canister.io:5000/flaviosi8/si8cloud-console-fe:0.4
