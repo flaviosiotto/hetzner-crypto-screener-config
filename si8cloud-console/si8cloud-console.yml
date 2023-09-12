@@ -29,9 +29,9 @@ services:
     image: cloud.canister.io:5000/flaviosi8/si8cloud-console-be:latest
     environment:
       - DB_HOST=postgres
-      - DB_NAME=postgres
-      - DB_PASSWORD=postgres
-      - DB_USER=postgres
+      - DB_NAME=${POSTGRES_DB}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_USER=${POSTGRES_USER}
       - DB_PORT=5432
       - SECRET_KEY=loremipsum
     volumes:
