@@ -8,6 +8,8 @@ services:
       - 8080:80
     volumes:
       - "/mnt/share/hetzner-config/si8cloud-console/nginx.conf:/etc/nginx/nginx.conf"
+    depends_on:
+      - si8cloud-console-fe
 
   postgres:
     image: postgres:13-alpine
