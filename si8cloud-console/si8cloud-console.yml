@@ -1,6 +1,14 @@
 version: "3.9"
 
 services:
+
+  proxy-server-nginx:
+    image: nginx:stable
+    ports:
+      - 8080:8080
+    volumes:
+      - "${PATH_NGINX_CONF}/nginx.conf:/etc/nginx/nginx.conf"
+
   postgres:
     image: postgres:13-alpine
     volumes:
@@ -51,7 +59,5 @@ services:
   si8cloud-console-fe:
     image: cloud.canister.io:5000/flaviosi8/si8cloud-console-fe:0.4
     command: nginx
-    ports:
-      - 8080:8080
     depends_on:
       - si8cloud-console-be
