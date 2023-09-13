@@ -7,7 +7,7 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - "${PATH_NGINX_CONF}/nginx.conf:/etc/nginx/nginx.conf"
+      - "/mnt/share/hetzner-config/si8cloud-console/nginx.conf:/etc/nginx/nginx.conf"
 
   postgres:
     image: postgres:13-alpine
