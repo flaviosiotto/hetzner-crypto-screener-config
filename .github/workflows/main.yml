@@ -32,8 +32,8 @@ jobs:
           username: ${{ vars.OS_USERNAME }}
           key: ${{ secrets.PRIV_KEY }}
           port: ${{ vars.SSH_PORT }}
-          source: "si8cloud-console/si8cloud-console.yml"
-          target: "/root"
+          source: "./*"
+          target: "/mnt/share/hetzner-config"
       -
         name: deploy docker stack sicloud-console
         uses: appleboy/ssh-action@master
@@ -53,4 +53,4 @@ jobs:
           script: |
             export POSTGRES_DATA_DIR=$POSTGRES_DATA_DIR
             export PGADMIN_DATA_DIR=$PGADMIN_DATA_DIR
-            docker stack deploy -c si8cloud-console/si8cloud-console.yml si8cloud-console --with-registry-auth
+            docker stack deploy -c /mnt/share/hetzner-config/si8cloud-console/si8cloud-console.yml si8cloud-console --with-registry-auth
