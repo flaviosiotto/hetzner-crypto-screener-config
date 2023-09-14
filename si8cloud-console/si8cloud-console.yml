@@ -5,7 +5,8 @@ services:
   proxy-server-nginx:
     image: nginx:stable
     volumes:
-      - "/mnt/share/hetzner-config/si8cloud-console/nginx.conf:/etc/nginx/nginx.conf"
+      - "${CONF_DIR}/nginx/nginx.conf:/etc/nginx/nginx.conf"
+      - "${CONF_DIR}/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf"
     depends_on:
       - si8cloud-console-fe
     ports:
