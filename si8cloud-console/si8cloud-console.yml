@@ -8,6 +8,7 @@ services:
       - "/mnt/share/hetzner-config/si8cloud-console/nginx.conf:/etc/nginx/nginx.conf"
     depends_on:
       - si8cloud-console-fe
+    command: sleep 180
 
   postgres:
     image: postgres:13-alpine
