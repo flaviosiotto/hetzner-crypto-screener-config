@@ -44,6 +44,7 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           PGADMIN_DATA_DIR: ${{ vars.PGADMIN_DATA_DIR }}
           PGADMIN_PASSWORD: ${{ secrets.PGADMIN_PASSWORD }}
+          CONF_DIR: ${{ vars.CONF_DIR }}
         with:
           host: ${{ vars.MANAGER_HOSTNAME }}
           username: ${{ vars.OS_USERNAME }}
