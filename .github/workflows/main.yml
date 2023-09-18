@@ -54,4 +54,4 @@ jobs:
           script: |
             export POSTGRES_DATA_DIR=$POSTGRES_DATA_DIR
             export PGADMIN_DATA_DIR=$PGADMIN_DATA_DIR
-            docker stack deploy -c /mnt/share/hetzner-config/si8cloud-console/si8cloud-console.yml si8cloud-console --with-registry-auth
+            docker stack deploy -c /mnt/share/hetzner-config/si8cloud-console/si8cloud-console.yml si8cloud-console --with-registry-auth --resolve-image always
