@@ -60,7 +60,7 @@ services:
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
 
   si8cloud-console-fe:
-    image: cloud.canister.io:5000/flaviosi8/si8cloud-console-fe:0.4
+    image: cloud.canister.io:5000/flaviosi8/si8cloud-console-fe:latest
     command: nginx
     depends_on:
       - si8cloud-console-be
