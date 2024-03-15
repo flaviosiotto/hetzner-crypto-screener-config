@@ -84,6 +84,7 @@ services:
     depends_on:
       - postgres
 
+
   si8cloud-console-be:
     image: si8cloud-console-be:latest
     deploy:
