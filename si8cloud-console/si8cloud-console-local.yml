@@ -9,7 +9,7 @@ services:
       - --entryPoints.web.address=:8000
       - --entryPoints.web.asdefault=true
       - --providers.swarm.endpoint=unix:///var/run/docker.sock
-      - --log.level=INFO
+      - --log.level=DEBUG
       - --api=true
       - --api.dashboard=true
       - --providers.docker.exposedbydefault=false
@@ -44,8 +44,7 @@ services:
       labels:
         - traefik.enable=true
         - traefik.http.routers.postgres.rule=Host(`postgres.si8cloud.localhost`)
-        - traefik.http.services.postgres-service.loadbalancer.server.port=5432
-        - traefik.http.routers.whoami.entrypoints=web
+        - traefik.http.services.postgres.loadbalancer.server.port=5432
       restart_policy:
         condition: on-failure
         delay: 5s
@@ -53,12 +52,14 @@ services:
         window: 120s
     volumes:
       - ${POSTGRES_DATA_DIR}:/var/lib/postgresql/data
+      - /etc/passwd:/etc/passwd:ro
+    networks: 
+      - si8cloud
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     user: 1000:1000
-
 
   pgadmin:
     image: dpage/pgadmin4
@@ -66,24 +67,26 @@ services:
       labels:
         - traefik.enable=true
         - traefik.http.routers.pgadmin.rule=Host(`pgadmin.si8cloud.localhost`)
-        - traefik.http.services.pgadmin-service.loadbalancer.server.port=80
-        - traefik.http.routers.whoami-http.entrypoints=web
-        - traefik.http.routers.whoami-http.middlewares=whoami-https-redirect
-        restart_policy:
+        - traefik.http.services.pgadmin.loadbalancer.server.port=80
+        - traefik.http.routers.pgadmin.entrypoints=web
+#        - traefik.http.routers.whoami-http.middlewares=whoami-https-redirect
+      restart_policy:
         condition: on-failure
         delay: 5s
         max_attempts: 3
         window: 120s
     volumes:
       - ${PGADMIN_DIR}:/var/lib/pgadmin
+    networks: 
+      - si8cloud
     environment:
       - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL}
       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
+      - PGADMIN_DISABLE_POSTFIX=True
       - PGADMIN_LISTEN_PORT=80
       - CONFIG_DATABASE_URI=postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@postgres:5432/{POSTGRES_DB}
     depends_on:
       - postgres
-
 
   si8cloud-console-be:
     image: si8cloud-console-be:latest
@@ -97,6 +100,8 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
+    networks: 
+      - si8cloud
     environment:
       - DB_HOST=postgres
       - DB_NAME=${POSTGRES_DB}
@@ -106,9 +111,10 @@ services:
       - SECRET_KEY=loremipsum
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ${SI8CLOUD_BE_SRC_DIR}:/code
     depends_on:
       - postgres
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
   si8cloud-console-fe:
     image: si8cloud-console-fe:dev
