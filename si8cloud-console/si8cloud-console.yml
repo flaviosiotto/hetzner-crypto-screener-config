@@ -2,42 +2,106 @@ version: "3.9"
 
 services:
 
-  proxy-server-nginx:
-    image: nginx:stable
-    volumes:
-      - ${CONF_DIR}/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ${CONF_DIR}/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
-    depends_on:
-      - si8cloud-console-fe
+  reverse-proxy:
+    image: traefik:v3.0
+    command:
+      - --providers.swarm=true
+      - --entryPoints.web.address=:8000
+      - --entryPoints.web.asdefault=true
+      - --providers.swarm.endpoint=unix:///var/run/docker.sock
+      - --log.level=DEBUG
+      - --api=true
+      - --api.dashboard=true
+      - --providers.docker.exposedbydefault=false
+
+    networks: 
+      - si8cloud
     ports:
-      - 8080:80
+      - "8000:8000"
+
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.dashboard.rule=Host(`traefik.si8cloud.localhost`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+        - "traefik.http.routers.dashboard.service=api@internal"
+        - "traefik.http.routers.dashboard.tls=false"
+        # Dummy service for Swarm port detection. The port can be any valid integer value.
+        - "traefik.http.services.dummy-svc.loadbalancer.server.port=9999"
+
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+
 
   postgres:
     image: postgres:13-alpine
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.postgres.rule=Host(`postgres.si8cloud.localhost`)
+        - traefik.http.services.postgres.loadbalancer.server.port=5432
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
     volumes:
       - ${POSTGRES_DATA_DIR}:/var/lib/postgresql/data
+      - /etc/passwd:/etc/passwd:ro
+    networks: 
+      - si8cloud
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     user: 1000:1000
-    ports:
-      - 5432:5432
 
   pgadmin:
     image: dpage/pgadmin4
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.pgadmin.rule=Host(`pgadmin.si8cloud.localhost`)
+        - traefik.http.services.pgadmin.loadbalancer.server.port=80
+        - traefik.http.routers.pgadmin.entrypoints=web
+#        - traefik.http.routers.whoami-http.middlewares=whoami-https-redirect
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    volumes:
+      - ${PGADMIN_DIR}:/var/lib/pgadmin
+    networks: 
+      - si8cloud
     environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@local.com
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL}
       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
+      - PGADMIN_DISABLE_POSTFIX=True
       - PGADMIN_LISTEN_PORT=80
-      - CONFIG_DATABASE_URI=postgresql://pgadmin:pgadmin@postgres:5432/pgadmin
-    ports:
-      - 80:80
+      - CONFIG_DATABASE_URI=postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@postgres:5432/{POSTGRES_DB}
     depends_on:
       - postgres
 
   si8cloud-console-be:
-    image: cloud.canister.io:5000/flaviosi8/si8cloud-console-be:latest
+    image: si8cloud-console-be:latest
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.si8cloud-console-be.rule=Host(`api.si8cloud.localhost`)
+        - traefik.http.services.si8cloud-console-be-service.loadbalancer.server.port=8000
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    networks: 
+      - si8cloud
     environment:
       - DB_HOST=postgres
       - DB_NAME=${POSTGRES_DB}
@@ -47,20 +111,34 @@ services:
       - SECRET_KEY=loremipsum
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ${SI8CLOUD_BE_SRC_DIR}:/code
     depends_on:
       - postgres
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  si8cloud-console-fe:
+    image: si8cloud-console-fe:dev
     deploy:
-      placement:
-        constraints: [node.hostname == docker-ce-ubuntu-dev02 ]
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.si8cloud-console-fe.rule=Host(`console.si8cloud.localhost`)
+        - traefik.http.services.si8cloud-console-fe-service.loadbalancer.server.port=5173
       restart_policy:
         condition: on-failure
         delay: 5s
         max_attempts: 3
         window: 120s
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    volumes:
+      - ${SI8CLOUD_FE_SRC_DIR}:/app
+    networks: 
+      - si8cloud
+    command: vite --host 0.0.0.0
+#    depends_on:
+#      - si8cloud-console-be
 
-  si8cloud-console-fe:
-    image: cloud.canister.io:5000/flaviosi8/si8cloud-console-fe:latest
-    command: nginx
-    depends_on:
-      - si8cloud-console-be
+
+networks:
+  si8cloud:
+    name: si8cloud
+    driver: overlay
+    attachable: true
