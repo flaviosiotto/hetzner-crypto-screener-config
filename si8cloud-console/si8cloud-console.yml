@@ -15,7 +15,7 @@ services:
       - --providers.docker.exposedbydefault=false
 
     networks: 
-      - si8cloud
+      - si8cloud-console
     ports:
       - "8000:8000"
 
@@ -54,7 +54,7 @@ services:
       - ${POSTGRES_DATA_DIR}:/var/lib/postgresql/data
       - /etc/passwd:/etc/passwd:ro
     networks: 
-      - si8cloud
+      - si8cloud-console
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -78,7 +78,7 @@ services:
     volumes:
       - ${PGADMIN_DIR}:/var/lib/pgadmin
     networks: 
-      - si8cloud
+      - si8cloud-console
     environment:
       - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL}
       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
@@ -101,7 +101,7 @@ services:
         max_attempts: 3
         window: 120s
     networks: 
-      - si8cloud
+      - si8cloud-console
     environment:
       - DB_HOST=postgres
       - DB_NAME=${POSTGRES_DB}
@@ -131,14 +131,14 @@ services:
     volumes:
       - ${SI8CLOUD_FE_SRC_DIR}:/app
     networks: 
-      - si8cloud
+      - si8cloud-console
     command: vite --host 0.0.0.0
 #    depends_on:
 #      - si8cloud-console-be
 
 
 networks:
-  si8cloud:
-    name: si8cloud
+  si8cloud-console:
+    name: si8cloud-console
     driver: overlay
     attachable: true
