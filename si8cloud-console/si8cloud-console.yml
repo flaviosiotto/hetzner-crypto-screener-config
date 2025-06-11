@@ -39,7 +39,7 @@ services:
 
 
   postgres:
-    image: postgres:13-alpine
+    image: postgres:17.2-alpine3.21
     deploy:
       labels:
         - traefik.enable=true
