@@ -52,10 +52,20 @@ services:
   si8cloud-console-be:
     build:
       context: ${SI8CLOUD_BE_SRC_DIR}
+
+    # ───── Traefik ─────────────────────────────────────────
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.si8cloud-console-backend.rule=PathPrefix(`/si8cloud-api`)
-      - traefik.http.services.si8cloud-console-be-service.loadbalancer.server.port=8000
+      - "traefik.enable=true"
+      # Router → intercetta qualunque path che inizi per /si8cloud-api
+      - "traefik.http.routers.si8cloud-console-backend.rule=PathPrefix(`/si8cloud-api`)"
+      - "traefik.http.routers.si8cloud-console-backend.entrypoints=web"   # <-- CORRETTO QUI
+      # Middleware → rimuove il prefisso prima di passare al servizio
+      - "traefik.http.middlewares.si8cloud-strip.stripprefix.prefixes=/si8cloud-api"
+      - "traefik.http.routers.si8cloud-console-backend.middlewares=si8cloud-strip"
+      # Backend service porta 8000
+      - "traefik.http.services.si8cloud-console-be-service.loadbalancer.server.port=8000"
+
+    # ───── Variabili d'ambiente ───────────────────────────
     environment:
       - DB_HOST=si8cloud-postgres
       - DB_NAME=${SI8CLOUD_POSTGRES_DB}
@@ -63,12 +73,24 @@ services:
       - DB_USER=${SI8CLOUD_POSTGRES_USER}
       - DB_PORT=5432
       - SECRET_KEY=${SI8CLOUD_SECRET_KEY:-loremipsum}
+      # opzionale se nel codice leggi ROOT_PATH
+      - ROOT_PATH=/si8cloud-api
+
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${SI8CLOUD_BE_SRC_DIR}:/code
+
     depends_on:
       - si8cloud-postgres
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+    # ───── Avvio Uvicorn con root-path ────────────────────
+    command: >
+      uvicorn app.main:app
+      --host 0.0.0.0
+      --port 8000
+      --reload
+      --root-path /si8cloud-api
+
     networks:
       - si8cloud-network
 
@@ -78,9 +100,11 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.si8cloud-console-frontend.rule=PathPrefix(`/si8cloud-console`)
-      - traefik.http.services.si8cloud-console-fe-service.loadbalancer.server.port=5173
+      - traefik.http.services.si8cloud-console-fe-service.loadbalancer.server.port=3000
     volumes:
       - ${SI8CLOUD_FE_SRC_DIR}:/app
+    ports:
+      - "3000:3000"
     command: npm run dev -- --host 0.0.0.0
     networks:
       - si8cloud-network
