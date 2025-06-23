@@ -100,12 +100,12 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.si8cloud-console-frontend.rule=PathPrefix(`/si8cloud-console`)
-      - traefik.http.services.si8cloud-console-fe-service.loadbalancer.server.port=3000
+      - traefik.http.routers.si8cloud-console-frontend.entrypoints=web
     volumes:
-      - ${SI8CLOUD_FE_SRC_DIR}:/app
-    ports:
-      - "3000:3000"
-    command: npm run dev -- --host 0.0.0.0
+      - ${SI8CLOUD_FE_SRC_DIR}:/src
+      - /src/node_modules
+    command: npm run dev
+    working_dir: /src
     networks:
       - si8cloud-network
 
